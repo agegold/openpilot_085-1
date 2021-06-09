@@ -62,9 +62,9 @@ typedef enum UIStatus {
 
 const QColor bg_colors [] = {
   [STATUS_DISENGAGED] =  QColor(0x17, 0x33, 0x49, 0xc8),
-  [STATUS_ENGAGED] = QColor(0x17, 0x86, 0x44, 0xf1),
-  [STATUS_WARNING] = QColor(0xDA, 0x6F, 0x25, 0xf1),
-  [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0xf1),
+  [STATUS_ENGAGED] = QColor(0x17, 0x86, 0x44, 0x51),
+  [STATUS_WARNING] = QColor(0xDA, 0x6F, 0x25, 0x51),
+  [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0x31),
 };
 
 typedef struct {
@@ -82,6 +82,13 @@ typedef struct UIScene {
   bool world_objects_visible;
 
   cereal::PandaState::PandaType pandaType;
+
+  cereal::DeviceState::Reader deviceState;
+  cereal::RadarState::LeadData::Reader lead_data[2];
+  cereal::CarState::Reader car_state;
+  cereal::ControlsState::Reader controls_state;
+  cereal::DriverState::Reader driver_state;
+
 
   // gps
   int satelliteCount;
@@ -102,6 +109,43 @@ typedef struct UIScene {
   float light_sensor, accel_sensor, gyro_sensor;
   bool started, ignition, is_metric, longitudinal_control, end_to_end;
   uint64_t started_frame;
+
+
+  // atom
+  struct _screen
+  {
+     int  nTime;
+     int  autoScreenOff;
+     int  brightness;
+     int  nVolumeBoost;
+     int  awake;
+  } scr;
+
+  
+  int  dash_menu_no;
+  struct _mouse
+  {
+    int touch_x;
+    int touch_y;
+    int touched;
+    int touch_cnt;
+    int sidebar;
+  } mouse;
+
+  cereal::ModelDataV2::Reader modelDataV2;
+  cereal::FrameData::Reader   camera_state;
+  cereal::CarControl::Reader carControl;
+  cereal::LateralPlan::Reader lateralPlan;
+  cereal::LiveParametersData::Reader   liveParameters;
+  cereal::GpsLocationData::Reader   gpsLocationExternal;
+  cereal::LongitudinalPlan::Reader longitudinalPlan;
+
+  struct _STATUS_
+  {
+      std::string alertTextMsg1;
+      std::string alertTextMsg2; 
+      std::string alertTextMsg3;
+  } alert;
 } UIScene;
 
 typedef struct UIState {
@@ -175,7 +219,7 @@ private:
   const float accel_samples = 5*UI_FREQ;
 
   bool awake;
-  int awake_timeout = 0;
+  int awake_timeout = 900;
   float accel_prev = 0;
   float gyro_prev = 0;
   float last_brightness = 0;
@@ -185,6 +229,7 @@ private:
 
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);
+  void ScreenAwake();
 
 signals:
   void displayPowerChanged(bool on);

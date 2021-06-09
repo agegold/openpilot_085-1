@@ -18,6 +18,8 @@
 #include "selfdrive/ui/ui.h"
 #include "selfdrive/ui/qt/util.h"
 
+#include "atom/userPanel.hpp"
+
 TogglesPanel::TogglesPanel(QWidget *parent) : QWidget(parent) {
   QVBoxLayout *toggles_list = new QVBoxLayout();
 
@@ -352,6 +354,7 @@ void SettingsWindow::showEvent(QShowEvent *event) {
     {"Network", network_panel(this)},
     {"Toggles", new TogglesPanel(this)},
     {"Software", new SoftwarePanel()},
+    {"User", new CUserPanel(this)},
   };
 
   sidebar_layout->addSpacing(45);
@@ -367,8 +370,8 @@ void SettingsWindow::showEvent(QShowEvent *event) {
         background: none;
         font-size: 65px;
         font-weight: 500;
-        padding-top: 35px;
-        padding-bottom: 35px;
+        padding-top: 18px;
+        padding-bottom: 18px;
       }
       QPushButton:checked {
         color: white;

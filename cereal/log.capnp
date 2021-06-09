@@ -286,6 +286,9 @@ struct DeviceState @0xa4d8b5af2aa492eb {
   networkStrength @24 :NetworkStrength;
   carBatteryCapacityUwh @25 :UInt32;
 
+  # atom
+  wifiIpAddress @33 :Text;
+  
   fanSpeedPercentDesired @10 :UInt16;
   started @11 :Bool;
   startedMonoTime @13 :UInt64;
@@ -538,6 +541,13 @@ struct ControlsState @0x97ff69c53601abf1 {
 
   cumLagMs @15 :Float32;
   canErrorCounter @57 :UInt32;
+
+  # atom
+  output @59 :Float32;
+  alertTextMsg1  @60 :Text;
+  alertTextMsg2  @61 :Text;
+  alertTextMsg3  @62 :Text;
+
 
   lateralControlState :union {
     indiState @52 :LateralINDIState;
@@ -824,6 +834,9 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   curvatureRate @23 :Float32;
   rawCurvature @24 :Float32;
   rawCurvatureRate @25 :Float32;
+
+  # atom
+  laneLess @26 :Bool;
 
   enum Desire {
     none @0;
@@ -1248,6 +1261,12 @@ struct LiveParametersData {
   yawRate @7 :Float32;
   posenetSpeed @8 :Float32;
   posenetValid @9 :Bool;
+
+
+  # atom
+  steerRatioCV @10 :Float32;
+  steerActuatorDelayCV @11 :Float32;
+  steerRateCostCV @12 :Float32;
 }
 
 struct LiveMapDataDEPRECATED {

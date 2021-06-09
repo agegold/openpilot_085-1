@@ -68,20 +68,40 @@ void HomeWindow::showDriverView(bool show) {
 
 void HomeWindow::mousePressEvent(QMouseEvent* e) {
   // Handle sidebar collapsing
-  if (onroad->isVisible() && (!sidebar->isVisible() || e->x() > sidebar->width())) {
-
-    // TODO: Handle this without exposing pointer to map widget
+  // atom  mouse
+  int e_x = e->x();
+  int e_y = e->y();
+  int e_button= e->button();
+  // 1400, 820
+  if( e_x < 500 || e_y < 300 ) 
+  {
+    // Handle sidebar collapsing
+    bool bSidebar = sidebar->isVisible();
+    if (onroad->isVisible() && (!bSidebar || e_x > sidebar->width())) {
     // Hide map first if visible, then hide sidebar
     if (onroad->map != nullptr && onroad->map->isVisible()){
       onroad->map->setVisible(false);
     } else if (!sidebar->isVisible()) {
-      sidebar->setVisible(true);
+      bSidebar = true;
     } else {
-      sidebar->setVisible(false);
+      bSidebar = false;
 
       if (onroad->map != nullptr) onroad->map->setVisible(true);
     }
+    QUIState::ui_state.scene.mouse.sidebar = bSidebar;
+    sidebar->setVisible(bSidebar);
+    }
   }
+
+  if (QUIState::ui_state.scene.mouse.sidebar )
+  {
+    e_x -= QUIState::ui_state.viz_rect.x + (bdr_s * 2) + 170;
+  }
+  QUIState::ui_state.scene.mouse.touch_x = e_x;
+  QUIState::ui_state.scene.mouse.touch_y = e_y;
+  QUIState::ui_state.scene.mouse.touched = e_button;
+  QUIState::ui_state.scene.mouse.touch_cnt++;
+  printf("mousePressEvent %d,%d  %d \n", e_x, e_y, e_button);
 }
 
 // OffroadHome: the offroad home page
